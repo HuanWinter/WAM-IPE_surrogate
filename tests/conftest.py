@@ -14,7 +14,7 @@ TESTS_DIR = pathlib.Path(__file__).parent
 
 @pytest.fixture(scope="session")
 def demo_h5(tmp_path_factory) -> pathlib.Path:
-    """Build a 3-day, 41-level, 91x90 H5 slice around 2025-11-11 super-storm.
+    """Build a 5-day, 41-level, 91x90 H5 slice around 2025-11-11 super-storm.
 
     Starts 2025-11-09T00:00Z (48h before the storm) so a launch at the
     storm's onset (2025-11-11T00:00Z, tested below) has the full 48h lag
@@ -22,11 +22,17 @@ def demo_h5(tmp_path_factory) -> pathlib.Path:
     in storm_subset() (scripts/uq/multihorizon_rollout_t16.py:78-81):
     `idx >= MAX_LAG_STEPS` where MAX_LAG_STEPS = 48h * 6 frames/h.
 
+    5 days (not 3) so a T=16 autoregressive rollout from the 2025-11-11T00Z
+    launch (frame 288) has room for its aux/lag reads, which reach as far
+    as launch_frame + 15*18 = 558 frames ahead (see rollout._build_aux_at_frame
+    at the last rollout step) — comfortably inside 720 frames but outside
+    the old 432-frame (3-day) span.
+
     Not a physically meaningful synthetic - just structurally identical to
     ML_ready_23-26_clean.h5 so dataset assembly can be tested end-to-end.
     """
     out = tmp_path_factory.mktemp("h5") / "demo_launch.h5"
-    n_frames = 3 * 24 * 6  # 3 days * 24 h * 6 frames/h = 432
+    n_frames = 5 * 24 * 6  # 5 days * 24 h * 6 frames/h = 720
     n_lev = 51
     n_lat = 91
     n_lon = 90
