@@ -57,9 +57,14 @@ def test_q_alpha_synthetic():
     assert 1.9 < q[("alt_0", "below")] < 2.0, q
 
 
+@pytest.mark.slow
 def test_apply_conformal_coverage_on_held_out():
     """Coverage on held-out samples should match alpha within a few percent
-    when the calibrator was fit on N samples from the same distribution."""
+    when the calibrator was fit on N samples from the same distribution.
+
+    Marked slow: allocates ~6.6 GB of float32 tensors (N=5000 x 41 x 89 x 90 x2)
+    which exceeds the memory of CI runners. Runs locally.
+    """
     rng = np.random.default_rng(2)
     N_cal, N_test = 5_000, 5_000
     sigma_true = 0.5
