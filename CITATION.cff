@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use WAMCast, please cite the JGR:MLC paper below."
+title: "WAMCast: Neural-Operator WAM-IPE Surrogate for Thermospheric Mass-Density Forecasting"
+version: 0.1.0
+date-released: 2026-08-01
+authors:
+  - family-names: Hu
+    given-names: Andong
+    email: andong.hu@colorado.edu
+    affiliation: "Space Weather Technology, Research and Education Center (SWx-TREC), University of Colorado Boulder"
+    orcid: "https://orcid.org/PLACEHOLDER-HU"
+  - family-names: McCrossan
+    given-names: Benjamin
+    affiliation: "Hyperios"
+    orcid: "https://orcid.org/PLACEHOLDER-MCC"
+license: MIT
+repository-code: "https://github.com/HuanWinter/wamcast"
+url: "https://github.com/HuanWinter/wamcast"
+keywords:
+  - space weather
+  - thermosphere
+  - neural operator
+  - SFNO
+  - WAM-IPE
+  - uncertainty quantification
+  - conformal prediction
+preferred-citation:
+  type: article
+  title: "WAMCast: A Neural-Operator WAM-IPE Surrogate Model for Storm-Time Thermospheric Mass-Density Forecasting with Calibrated Uncertainty"
+  authors:
+    - family-names: Hu
+      given-names: Andong
+    - family-names: McCrossan
+      given-names: Benjamin
+  journal: "Journal of Geophysical Research: Machine Learning and Computation"
+  year: 2026
+  notes: "In review at submission time; update DOI on acceptance."

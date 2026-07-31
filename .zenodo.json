@@ -1,0 +1,36 @@
+{
+  "title": "WAMCast: Neural-Operator WAM-IPE Surrogate for Thermospheric Mass-Density Forecasting",
+  "description": "Inference-only Python package for the WAMCast surrogate model of WAM-IPE thermospheric mass density. Includes the T=16 SFNO backbone, 20-member ensemble rollout, and split-conformal calibration used in Hu & McCrossan (2026, JGR:MLC).",
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Hu, Andong",
+      "affiliation": "Space Weather Technology, Research and Education Center (SWx-TREC), University of Colorado Boulder",
+      "orcid": "PLACEHOLDER-HU"
+    },
+    {
+      "name": "McCrossan, Benjamin",
+      "affiliation": "Hyperios",
+      "orcid": "PLACEHOLDER-MCC"
+    }
+  ],
+  "keywords": [
+    "space weather",
+    "thermosphere",
+    "neural operator",
+    "SFNO",
+    "WAM-IPE",
+    "uncertainty quantification",
+    "conformal prediction",
+    "machine learning"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/HuanWinter/wamcast",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}
