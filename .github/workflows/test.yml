@@ -1,0 +1,30 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test,dev]"
+      - name: Lint (ruff)
+        run: ruff check src tests examples || true  # examples/ may not exist yet
+      - name: Type-check (mypy)
+        run: mypy src/wamcast || true  # non-blocking until strict types land
+      - name: Test (fast only)
+        run: pytest -m "not slow and not gpu" --cov=wamcast --cov-report=term-missing
