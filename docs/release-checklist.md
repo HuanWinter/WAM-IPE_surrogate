@@ -4,7 +4,7 @@ This checklist covers the manual actions to publish v0.1.0 on GitHub + Zenodo. A
 
 ## Prerequisites
 
-- [ ] GitHub personal account has push access to `github.com/HuanWinter/wamcast` (create the repo if it doesn't exist yet)
+- [ ] GitHub personal account has push access to `github.com/HuanWinter/WAM-IPE_surrogate` (create the repo if it doesn't exist yet)
 - [ ] Both authors have ORCID iDs. If not, register at https://orcid.org.
 - [ ] Zenodo account linked to GitHub (https://zenodo.org/account/settings/github/)
 
@@ -31,18 +31,18 @@ The `pyproject.toml` uses `mccrossan@hyperios.com` as a placeholder. Replace wit
 cd /media/faraday/andong/Workspace/wamcast
 
 # Enable Zenodo integration BEFORE the first tag:
-# https://zenodo.org/account/settings/github/ → toggle HuanWinter/wamcast ON
+# https://zenodo.org/account/settings/github/ → toggle HuanWinter/WAM-IPE_surrogate ON
 # (This is essential — Zenodo only mints DOIs for repos it was watching before the tag.)
 
 # Create the repo on GitHub (skip if it already exists):
-gh repo create HuanWinter/wamcast \
+gh repo create HuanWinter/WAM-IPE_surrogate \
     --public \
     --description "Neural-operator WAM-IPE surrogate for storm-time thermospheric mass-density forecasting" \
     --source . \
     --push
 
 # If gh isn't available / repo exists:
-git remote add origin git@github.com:HuanWinter/wamcast.git  # or https://
+git remote add origin git@github.com:HuanWinter/WAM-IPE_surrogate.git  # or https://
 git push -u origin main
 ```
 
@@ -215,7 +215,7 @@ A frozen release of the code, the 20-seed model checkpoints ($T{=}16$ and $T{=}4
 with:
 
 ```
-An inference-only Python package, WAMCast, is available at \url{https://github.com/HuanWinter/wamcast} (v0.1.0) with 20-member T=16 checkpoints, the pre-fit split-conformal calibrator, and demo ML-ready HDF5 subsets covering the 10 test storms archived on Zenodo at \url{https://doi.org/10.5281/zenodo.<REAL_RECORD>}. Reproducing every headline number in Table~\ref{tab:headline_per_horizon} from the archived artifacts is documented in \texttt{docs/reproducibility.md}.
+An inference-only Python package, WAMCast, is available at \url{https://github.com/HuanWinter/WAM-IPE_surrogate} (v0.1.0) with 20-member T=16 checkpoints, the pre-fit split-conformal calibrator, and demo ML-ready HDF5 subsets covering the 10 test storms archived on Zenodo at \url{https://doi.org/10.5281/zenodo.<REAL_RECORD>}. Reproducing every headline number in Table~\ref{tab:headline_per_horizon} from the archived artifacts is documented in \texttt{docs/reproducibility.md}.
 ```
 
 Then commit and push to Overleaf (the main-tree GitHub push remains blocked by the .npz history issue).

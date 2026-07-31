@@ -28,7 +28,7 @@
   ],
   "related_identifiers": [
     {
-      "identifier": "https://github.com/HuanWinter/wamcast",
+      "identifier": "https://github.com/HuanWinter/WAM-IPE_surrogate",
       "relation": "isSupplementTo",
       "resource_type": "software"
     }

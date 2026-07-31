@@ -47,10 +47,10 @@ dev = ["ruff>=0.4", "mypy>=1.9"]
 wamcast = "wamcast.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/HuanWinter/wamcast"
-Documentation = "https://github.com/HuanWinter/wamcast/tree/main/docs"
-Repository = "https://github.com/HuanWinter/wamcast"
-Issues = "https://github.com/HuanWinter/wamcast/issues"
+Homepage = "https://github.com/HuanWinter/WAM-IPE_surrogate"
+Documentation = "https://github.com/HuanWinter/WAM-IPE_surrogate/tree/main/docs"
+Repository = "https://github.com/HuanWinter/WAM-IPE_surrogate"
+Issues = "https://github.com/HuanWinter/WAM-IPE_surrogate/issues"
 
 [tool.setuptools.dynamic]
 version = {attr = "wamcast._version.__version__"}

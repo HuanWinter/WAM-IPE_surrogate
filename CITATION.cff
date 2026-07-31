@@ -14,8 +14,8 @@ authors:
     affiliation: "Hyperios"
     orcid: "https://orcid.org/PLACEHOLDER-MCC"
 license: MIT
-repository-code: "https://github.com/HuanWinter/wamcast"
-url: "https://github.com/HuanWinter/wamcast"
+repository-code: "https://github.com/HuanWinter/WAM-IPE_surrogate"
+url: "https://github.com/HuanWinter/WAM-IPE_surrogate"
 keywords:
   - space weather
   - thermosphere

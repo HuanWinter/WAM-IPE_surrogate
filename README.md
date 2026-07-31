@@ -11,7 +11,7 @@ pip install wamcast
 Or from source:
 
 ```bash
-git clone https://github.com/HuanWinter/wamcast.git
+git clone https://github.com/HuanWinter/WAM-IPE_surrogate.git
 cd wamcast
 pip install -e ".[test,dev]"
 ```
