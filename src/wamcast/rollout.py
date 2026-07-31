@@ -13,10 +13,21 @@ exactly — verified against the reference source, not paraphrased):
   - lag24 is read from H5 truth for k <= 9: frame = launch_frame +
     (k - 9) * DELAY_FRAMES (k=9 falls back to the launch frame itself).
     For k >= 10, lag24 is fed from the model's own trajectory: traj[k - 9].
-  Note the fall-back index is k - 9 (not k - 8): the reference script's
-  condition is `if k <= 9: ... else: lag24 = traj[k - 9]`. An off-by-one
-  variant (k <= 8 / traj[k - 8]) appears in an earlier draft of this task
-  but does not match the checked-in reference script and was not used here.
+
+  The k <= 9 / traj[k - 9] cutoff (not k <= 8 / traj[k - 8]) is pinned
+  directly to the checked-in reference source:
+  WAM-IPE/scripts/uq/multihorizon_rollout_t16.py:229-232 —
+
+      if k <= 9:
+          lag24 = torch.from_numpy(real_lag24[k][b0:b1])...
+      else:
+          lag24 = torch.from_numpy(traj[k - 9][b0:b1])...
+
+  An off-by-one variant (k <= 8 / traj[k - 8]) appeared in an earlier
+  draft of this task's instructions but does not match those four lines
+  of the reference script, so it was not used here. If the reference
+  script's cutoff is ever revised, update LAG24_TEACHER_FORCE_STEPS below
+  and this citation together.
 """
 from __future__ import annotations
 
