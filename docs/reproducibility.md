@@ -1,6 +1,6 @@
-# Reproducing the paper headline numbers
+# Reproducing the paper forecasts
 
-This walks through reproducing the +48h grid MAE and satellite RMSE numbers reported in Hu & McCrossan (2026), Table 1 and Table 2, using only the WAMCast package and the Zenodo release.
+This document covers the gridded thermospheric mass-density forecasts (`rho_mu` at +3, +6, +12, +24, +48 h) that underlie the headline numbers in Hu & McCrossan (2026). The package alone reproduces those forecasts and their split-conformal intervals; baseline comparisons (NRLMSIS, WFS), satellite-track RMSE, retraining ablations, and figure generation live in the research repo and require external data (TU Delft satellite densities, NOAA WFS archive).
 
 ## 1. Install
 
@@ -69,4 +69,4 @@ The repo includes `tests/test_golden.py` which reproduces storm-11's +48h MAE (p
 pytest -m 'slow and gpu' tests/test_golden.py -v
 ```
 
-Currently: PASSES on the author's GPU box if the safe-globals shim covers all numpy globals in the ckpts. If it fails with a `_pickle.UnpicklingError`, extend the allowlist in `src/wamcast/model.py:load_wamcast_from_checkpoint`.
+If it fails with a `_pickle.UnpicklingError`, extend the numpy safe-globals allowlist in `src/wamcast/model.py:load_wamcast_from_checkpoint`. The current allowlist covers the numpy scalar and dtype classes present in the manuscript's ensemble checkpoints under torch 2.13.

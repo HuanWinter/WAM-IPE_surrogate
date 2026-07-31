@@ -58,8 +58,8 @@ def test_q_alpha_synthetic():
 
 
 def test_apply_conformal_coverage_on_held_out():
-    """If we calibrate on N samples and apply to held-out, coverage at alpha
-    should match alpha within a few percent."""
+    """Coverage on held-out samples should match alpha within a few percent
+    when the calibrator was fit on N samples from the same distribution."""
     rng = np.random.default_rng(2)
     N_cal, N_test = 5_000, 5_000
     sigma_true = 0.5

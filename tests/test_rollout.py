@@ -1,14 +1,20 @@
 """Tests for rollout.rollout() and rollout.ensemble_rollout()."""
 from __future__ import annotations
 
-import numpy as np
 import pytest
-import torch
 
-from wamcast.dataset import ForecastInputs
-from wamcast.drivers import frozen_drivers
-from wamcast.model import WAMCastModel
-from wamcast.rollout import ensemble_rollout, rollout
+pytest.importorskip(
+    "torch_harmonics",
+    reason="torch_harmonics C extension unavailable (typical on CI without a matching torch ABI)",
+)
+
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+
+from wamcast.dataset import ForecastInputs  # noqa: E402
+from wamcast.drivers import frozen_drivers  # noqa: E402
+from wamcast.model import WAMCastModel  # noqa: E402
+from wamcast.rollout import ensemble_rollout, rollout  # noqa: E402
 
 
 @pytest.fixture

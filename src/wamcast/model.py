@@ -163,12 +163,10 @@ class WAMCastModel(pl.LightningModule):
     # Note: training_step / validation_step / configure_optimizers are
     # intentionally NOT defined here. pl.LightningModule provides them as
     # base-class stubs; this inference-only extract inherits those stubs
-    # unmodified rather than overriding or masking them. Overriding them
-    # (e.g. with AttributeError-raising properties) would risk breaking
-    # Lightning's internal code paths (including .load_from_checkpoint)
-    # that may probe these attributes, and would misrepresent the class
-    # shape to anyone introspecting it. The correct invariant to test is
-    # "we didn't override the stubs," not "the attribute is absent" — see
+    # unmodified. Overriding them (e.g. with AttributeError-raising
+    # properties) risks breaking Lightning internals (including
+    # .load_from_checkpoint) that probe these attributes. The correct
+    # invariant to test is that the stubs are not overridden, checked by
     # test_no_training_hooks_overridden in tests/test_model.py.
 
 

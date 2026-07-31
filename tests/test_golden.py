@@ -1,20 +1,27 @@
 """Golden test: reproduce a paper headline number from packaged inference.
 
-Marked `slow` and `gpu` — skipped in fast CI, run manually on a GPU box:
+Marked `slow` and `gpu`. Skipped in fast CI; run manually on a GPU box:
+
     pytest -m 'slow and gpu' tests/test_golden.py
 
-If the safe-globals shim in wamcast.model.load_wamcast_from_checkpoint is
-insufficient for the ckpts on Andong's system, this test will fail at load
-time with the same numpy globals error as test_model.py's xfail — that's a
-signal to extend the shim's allowlist, not a Task 10 regression.
+If the shim in wamcast.model.load_wamcast_from_checkpoint is insufficient
+for the ensemble checkpoints, this test fails at load time with the same
+numpy globals error as test_model.py's xfail. The fix is to extend the
+allowlist in that helper.
 """
 from __future__ import annotations
 
 import pathlib
 
-import numpy as np
 import pytest
-import torch
+
+pytest.importorskip(
+    "torch_harmonics",
+    reason="torch_harmonics C extension unavailable (typical on CI without a matching torch ABI)",
+)
+
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
 
 RESEARCH = pathlib.Path("/media/faraday/andong/Workspace/WAM-IPE")
 H5 = RESEARCH / "Res" / "ML_ready_23-26_clean.h5"

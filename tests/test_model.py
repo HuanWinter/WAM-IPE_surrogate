@@ -4,9 +4,15 @@ from __future__ import annotations
 import pathlib
 
 import pytest
-import torch
 
-from wamcast.model import WAMCastModel
+pytest.importorskip(
+    "torch_harmonics",
+    reason="torch_harmonics C extension unavailable (typical on CI without a matching torch ABI)",
+)
+
+import torch  # noqa: E402
+
+from wamcast.model import WAMCastModel  # noqa: E402
 
 
 def test_model_instantiates_with_default_hparams():

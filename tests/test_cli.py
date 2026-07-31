@@ -3,11 +3,17 @@ from __future__ import annotations
 
 import pathlib
 
-import numpy as np
 import pytest
-from click.testing import CliRunner
 
-from wamcast.cli import main
+pytest.importorskip(
+    "torch_harmonics",
+    reason="torch_harmonics C extension unavailable (typical on CI without a matching torch ABI)",
+)
+
+import numpy as np  # noqa: E402
+from click.testing import CliRunner  # noqa: E402
+
+from wamcast.cli import main  # noqa: E402
 
 
 def test_cli_help_lists_all_subcommands():

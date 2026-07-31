@@ -33,15 +33,15 @@ Output: CF-1.10 NetCDF with `rho_mu`, `rho_sigma`, and (with `--calibrator`) `rh
 
 ## Reproducing the manuscript forecasts
 
-WAMCast produces the same gridded thermospheric mass-density forecasts (`rho_mu` at +3, +6, +12, +24, +48 h) that generate every headline number in Hu & McCrossan (2026). Numerical parity is enforced by a golden test:
+The gridded mass-density forecasts produced by `wamcast forecast` (`rho_mu` at +3, +6, +12, +24, +48 h) are the same tensors that generate the headline numbers in Hu & McCrossan (2026). Numerical parity is verified by a golden test:
 
 ```bash
 pytest -m "slow and gpu" tests/test_golden.py -v
 ```
 
-That test loads the manuscript's 20-member T=16 ensemble checkpoints, runs the packaged autoregressive rollout on the 2025-11-11 super-storm launch with observed OMNI drivers, and asserts the +48 h pixel-weighted MAE matches the paper's reference value (`Res/uq/multihorizon/ens_t16_storm11.npz`) within 2 % relative tolerance.
+The test loads the 20-member T=16 ensemble checkpoints, replays the autoregressive rollout for the 2025-11-11 super-storm launch under observed OMNI drivers, and asserts the +48 h pixel-weighted MAE matches the reference NPZ (`Res/uq/multihorizon/ens_t16_storm11.npz`) within 2 % relative tolerance.
 
-**In scope for this package:** grid forecasts, 20-member ensemble spread, split-conformal intervals, three driver protocols (observed OMNI / SWPC forecast / frozen). **Out of scope:** NRLMSIS / WFS baselines, satellite-track RMSE (Swarm, GRACE-FO), retraining ablations, figure generation — those live in the research repo and depend on external datasets. See [docs/reproducibility.md](docs/reproducibility.md) for full walkthrough.
+Scope in this package: grid forecasts, 20-member ensemble spread, split-conformal intervals, three driver protocols (observed OMNI, SWPC forecast, frozen). Out of scope: NRLMSIS and WFS baselines, satellite-track RMSE against Swarm and GRACE-FO, retraining ablations, figure generation. Those pieces live in the research repo and depend on external datasets. See [docs/reproducibility.md](docs/reproducibility.md) for the full walkthrough.
 
 ## Documentation
 

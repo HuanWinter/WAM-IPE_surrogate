@@ -116,9 +116,9 @@ def compute_q_alpha(scores: dict[tuple, np.ndarray], alpha: float) -> dict[tuple
     ceil(alpha * (n + 1)) / n (Vovk 2005; Angelopoulos & Bates 2021, Thm 2),
     which gives a hard finite-sample coverage guarantee P(score <= q) >= alpha.
     The smooth form used here slightly undershoots that bound for small n
-    (typically by < 1% for n >= 100). For our calibration sets (cal scores
-    pooled across 5 storms × 1000s of samples per bin), n is large enough
-    that the difference is negligible.
+    (typically by < 1% for n >= 100). For the calibration sets used in this
+    package (cal scores pooled across 5 storms x 1000s of samples per bin),
+    n is large enough that the difference is negligible.
 
     Parameters
     ----------
