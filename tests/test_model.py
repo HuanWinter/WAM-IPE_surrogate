@@ -103,3 +103,30 @@ def test_load_real_training_checkpoint():
     assert m.hparams.rho_ch == 41
     # mean_u/std_u should have been overwritten from the ckpt state_dict
     assert not torch.allclose(m.mean_u, torch.zeros_like(m.mean_u))
+
+
+@pytest.mark.skipif(not REAL_CKPT.exists(), reason="real ckpt not present in CI")
+def test_load_real_ckpt_via_safe_globals_shim():
+    """Verify the load_wamcast_from_checkpoint helper works under torch>=2.6.
+
+    Note: unlike the assumption in the xfail test above, this ckpt (and, on
+    inspection, every ensemble_t16/member_NN/best.ckpt) has no "mean_u"/
+    "std_u" keys in its state_dict at all — those buffers predate this
+    training run. WAMCastModel.step() never reads them at inference time, so
+    load_wamcast_from_checkpoint falls back to a narrow non-strict load for
+    exactly this missing-key case (see the RuntimeError handler in
+    src/wamcast/model.py) and leaves mean_u/std_u at their __init__ defaults
+    (zeros/ones) rather than raising. This test checks that fallback path,
+    not that the buffers get overwritten.
+    """
+    from wamcast.model import load_wamcast_from_checkpoint
+    m = load_wamcast_from_checkpoint(str(REAL_CKPT), map_location="cpu")
+    assert m.hparams.rho_ch == 41
+    # These particular ckpts don't carry mean_u/std_u; confirm the shim left
+    # them at their documented __init__ defaults rather than silently
+    # producing garbage.
+    assert torch.allclose(m.mean_u, torch.zeros_like(m.mean_u))
+    assert torch.allclose(m.std_u, torch.ones_like(m.std_u))
+    # Weights that ARE in every ckpt must actually have been loaded (i.e.
+    # the non-strict fallback didn't accidentally no-op the whole load).
+    assert not torch.allclose(m.embed.weight, torch.zeros_like(m.embed.weight))

@@ -170,3 +170,86 @@ class WAMCastModel(pl.LightningModule):
     # shape to anyone introspecting it. The correct invariant to test is
     # "we didn't override the stubs," not "the attribute is absent" — see
     # test_no_training_hooks_overridden in tests/test_model.py.
+
+
+def load_wamcast_from_checkpoint(path: str, **kwargs):
+    """Load a WAMCastModel checkpoint with torch>=2.6 weights_only compatibility.
+
+    Trained ckpts contain numpy scalar globals (numpy._core.multiarray.scalar
+    and related). Under torch>=2.6, torch.load defaults to weights_only=True,
+    which refuses to unpickle those globals. This helper installs a safe-globals
+    allowlist covering numpy scalars/dtypes before delegating to
+    WAMCastModel.load_from_checkpoint, restoring loadability without the
+    security implications of a blanket weights_only=False.
+
+    Prefer this helper over WAMCastModel.load_from_checkpoint(path) directly
+    when loading manuscript ensemble ckpts on modern torch.
+    """
+    import torch.serialization
+    try:
+        import numpy as _np
+        safe_targets = []
+        # Cover the numpy scalar/dtype family used by Lightning's saved hparams.
+        for name in ("scalar", "_reconstruct", "ndarray"):
+            obj = getattr(getattr(_np, "_core", _np).multiarray, name, None)
+            if obj is not None:
+                safe_targets.append(obj)
+        for name in ("dtype", "float32", "float64", "int32", "int64", "bool_"):
+            obj = getattr(_np, name, None)
+            if obj is not None:
+                safe_targets.append(obj)
+        # numpy>=2.0 reworked dtypes into a class hierarchy under
+        # numpy.dtypes (Float64DType, Int64DType, ...); pickled ckpts can
+        # reference these concrete classes directly, so allowlist the
+        # whole family rather than guessing which ones a given ckpt used.
+        try:
+            import numpy.dtypes as _np_dtypes
+            for name in dir(_np_dtypes):
+                if name.endswith("DType"):
+                    obj = getattr(_np_dtypes, name, None)
+                    if obj is not None:
+                        safe_targets.append(obj)
+        except ImportError:
+            pass
+        if safe_targets:
+            torch.serialization.add_safe_globals(safe_targets)
+    except (ImportError, AttributeError):
+        # Fall back to the raw load; if it fails, the caller sees the same
+        # weights_only error the shim was meant to prevent.
+        pass
+
+    try:
+        return WAMCastModel.load_from_checkpoint(path, **kwargs)
+    except RuntimeError as exc:
+        # Separate, unrelated wrinkle discovered while wiring up this shim:
+        # the manuscript's ensemble_t16 ckpts predate the mean_u/std_u
+        # buffers and simply do not have those keys in state_dict (verified
+        # directly against member_00..02/best.ckpt). The research training
+        # script (train_camnet_spectral.py's warm-start path) treats exactly
+        # this case as expected and loads non-strictly for it. Those buffers
+        # are denormalization stats used only by the satellite-loss training
+        # path — WAMCastModel.step(), the actual inference forward pass,
+        # never reads self.mean_u/self.std_u — so silently keeping their
+        # __init__ defaults (zeros/ones) here does not affect forecasts.
+        # We narrow the fallback to exactly this key set so a load_state_dict
+        # failure for any OTHER reason (e.g. real architecture mismatch)
+        # still raises loudly instead of being masked.
+        msg = str(exc)
+        already_strict_false = kwargs.get("strict") is False
+        only_missing_norm_buffers = (
+            "Missing key(s) in state_dict" in msg
+            and "mean_u" in msg and "std_u" in msg
+            and "Unexpected key(s)" not in msg
+        )
+        if already_strict_false or not only_missing_norm_buffers:
+            raise
+        import warnings
+        warnings.warn(
+            "Checkpoint is missing mean_u/std_u buffers (predates their "
+            "introduction in this training run); retrying with strict=False. "
+            "These buffers are not read by WAMCastModel.step() at inference "
+            "time, so they are left at their __init__ defaults (zeros/ones).",
+            stacklevel=2,
+        )
+        retry_kwargs = {k: v for k, v in kwargs.items() if k != "strict"}
+        return WAMCastModel.load_from_checkpoint(path, strict=False, **retry_kwargs)
