@@ -5,10 +5,14 @@ import pathlib
 
 import pytest
 
-pytest.importorskip(
-    "torch_harmonics",
-    reason="torch_harmonics C extension unavailable (typical on CI without a matching torch ABI)",
-)
+try:
+    import torch_harmonics  # noqa: F401
+except ImportError:
+    pytest.skip(
+        "torch_harmonics C extension unavailable (typical on CI when the pip "
+        "torch and torch_harmonics wheels have incompatible C++ ABIs)",
+        allow_module_level=True,
+    )
 
 import torch  # noqa: E402
 
